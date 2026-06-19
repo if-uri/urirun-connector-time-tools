@@ -1,3 +1,3 @@
-from .core import connector_manifest, now, urirun_bindings
+from .core import CONNECTOR_ID, connector_manifest, now, urirun_bindings
 
-__all__ = ["connector_manifest", "now", "urirun_bindings"]
+__all__ = ["CONNECTOR_ID", "connector_manifest", "now", "urirun_bindings"]

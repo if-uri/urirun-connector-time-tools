@@ -1,0 +1,16 @@
+# Changelog
+
+## [Unreleased]
+
+## [0.1.1] - 2026-06-20
+
+### Changed
+- Use `urirun.connector(...)` in connector code and docs so connector id,
+  default URI target and binding export are declared once.
+- Require `urirun` `v0.3.13`, where the connector helper is available.
+
+## [0.1.0] - 2026-06-20
+
+### Added
+- Add the initial `time://host/clock/query/now` connector package with CLI,
+  registry binding export, Docker smoke test, MCP projection and A2A projection.

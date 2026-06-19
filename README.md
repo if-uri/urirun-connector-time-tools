@@ -2,7 +2,7 @@
 
 Time Tools connector for [ifURI](https://ifuri.com) / [urirun](https://github.com/tellmesh/urirun).
 
-- Declares `time://` URI routes with `@urirun.command`.
+- Declares `time://` URI routes with `@connector.command(...)`.
 - `connector.manifest.json` is the connect.ifuri.com catalog entry (validated by schema).
 - CLI: `urirun-time-tools now` · `urirun-time-tools manifest` · `urirun-time-tools bindings`.
 
@@ -19,15 +19,18 @@ urirun-time-tools now --timezone UTC --output iso
 make smoke        # bindings -> urirun validate/compile/run -> MCP tools + A2A card
 ```
 
-The route is declared once:
+The route is declared once. The connector id and URI scheme are initialized once,
+then each route can use a short path:
 
 ```python
 import urirun
 
-@urirun.command("time://host/clock/query/now")
+connector = urirun.connector("time-tools", scheme="time")
+
+@connector.command("clock/query/now")
 def now_command(timezone: str = "UTC", output: str = "iso") -> list[str]:
     return ["urirun-time-tools", "now", "--timezone", "{timezone}", "--output", "{output}"]
 ```
 
-`urirun.connector_bindings()` turns that declaration into the registry input
-used by CLI, host flows, MCP tools and A2A skills.
+`connector.bindings()` turns that declaration into the registry input used by
+CLI, host flows, MCP tools and A2A skills.

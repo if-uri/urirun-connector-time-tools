@@ -10,6 +10,7 @@ import urirun
 
 ROUTE_NOW = "time://host/clock/query/now"
 CONNECTOR_ID = "time-tools"
+CONNECTOR = urirun.connector(CONNECTOR_ID, scheme="time")
 
 
 def _json_resource(name: str) -> dict[str, Any]:
@@ -24,14 +25,14 @@ def connector_manifest() -> dict[str, Any]:
     return _json_resource("connector.manifest.json")
 
 
-@urirun.command(ROUTE_NOW, meta={"label": "Read current time", "connector": CONNECTOR_ID})
+@CONNECTOR.command("clock/query/now", meta={"label": "Read current time"})
 def now_command(timezone: str = "UTC", output: str = "iso") -> list[str]:
     """Declare the URI binding once; the function signature becomes the schema."""
     return ["urirun-time-tools", "now", "--timezone", "{timezone}", "--output", "{output}"]
 
 
 def urirun_bindings() -> dict[str, Any]:
-    return urirun.connector_bindings(connector=CONNECTOR_ID)
+    return CONNECTOR.bindings()
 
 
 def now(timezone: str = "UTC", output: str = "iso") -> dict[str, Any]:
