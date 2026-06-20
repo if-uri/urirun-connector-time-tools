@@ -1,10 +1,23 @@
 from __future__ import annotations
 
 import json
+import importlib
 
-from urirun import v2
+import urirun
 from urirun_connector_time_tools import connector_manifest, now, urirun_bindings
 from urirun_connector_time_tools.cli import main
+
+
+def _compile_registry(bindings: dict):
+    compile_registry = getattr(urirun, "compile_registry", None)
+    list_routes = getattr(urirun, "list_routes", None)
+    if compile_registry is not None and list_routes is not None:
+        registry = compile_registry(bindings)
+        return registry, list_routes(registry)
+    v2 = importlib.import_module("urirun.v2")
+
+    registry = v2.compile_registry(bindings)
+    return registry, v2.list_routes(registry)
 
 
 def test_now_returns_structured_time() -> None:
@@ -45,8 +58,7 @@ def test_bindings_shape() -> None:
 def test_bindings_are_json_serializable_and_compile() -> None:
     bindings = urirun_bindings()
     json.dumps(bindings)
-    registry = v2.compile_registry(bindings)
-    routes = v2.list_routes(registry)
+    _registry, routes = _compile_registry(bindings)
     assert any(route["uri"] == "time://host/clock/query/now" for route in routes)
 
 

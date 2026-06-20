@@ -2,6 +2,9 @@
 
 Time Tools connector for [ifURI](https://ifuri.com) / [urirun](https://github.com/tellmesh/urirun).
 
+Public hub page:
+[connect.ifuri.com/connectors/time-tools](https://connect.ifuri.com/connectors/time-tools)
+
 - Declares `time://` URI routes with `@connector.command(...)`.
 - `connector.manifest.json` is the connect.ifuri.com catalog entry (validated by schema).
 - CLI: `urirun-time-tools now` · `urirun-time-tools manifest` · `urirun-time-tools bindings`.
@@ -34,3 +37,13 @@ def now_command(timezone: str = "UTC", output: str = "iso") -> list[str]:
 
 `connector.bindings()` turns that declaration into the registry input used by
 CLI, host flows, MCP tools and A2A skills.
+
+## Related projects
+
+- Runtime: [tellmesh/urirun](https://github.com/tellmesh/urirun)
+- Connector hub: [connect.ifuri.com](https://connect.ifuri.com)
+- Examples: [if-uri/examples](https://github.com/if-uri/examples)
+- Current work summary:
+  [work-summary-2026-06-20](https://github.com/if-uri/docs/blob/main/work-summary-2026-06-20.md)
+
+Repository notes: [TODO.md](TODO.md) · [CHANGELOG.md](CHANGELOG.md)

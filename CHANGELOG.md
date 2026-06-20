@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+- Add connector TODO for hub install smoke, extra time formats and flow
+  examples.
+- Link README to the public connector hub page, examples and current
+  cross-repository work summary.
+
 ## [0.1.2] - 2026-06-20
 
 ### Changed
