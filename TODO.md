@@ -2,6 +2,8 @@
 
 ## Connector roadmap
 
+- [x] Expose `urirun_bindings()` through the stable `urirun.bindings`
+      entry-point group.
 - [ ] Add this connector to IFURI-016 full host-node Docker matrix with
       deterministic `time://` routes used by a flow.
 - [ ] Add hub install smoke coverage for `time-tools`.

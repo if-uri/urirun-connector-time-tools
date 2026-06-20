@@ -4,8 +4,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-import json
-from importlib import resources
 from typing import Any
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -16,16 +14,8 @@ CONNECTOR_ID = "time-tools"
 CONNECTOR = urirun.connector(CONNECTOR_ID, scheme="time")
 
 
-def _json_resource(name: str) -> dict[str, Any]:
-    text = resources.files(__package__).joinpath(name).read_text(encoding="utf-8")
-    data = json.loads(text)
-    if not isinstance(data, dict):
-        raise ValueError(f"{name} must contain a JSON object")
-    return data
-
-
 def connector_manifest() -> dict[str, Any]:
-    return _json_resource("connector.manifest.json")
+    return urirun.load_manifest(__package__)
 
 
 @CONNECTOR.command("clock/query/now", meta={"label": "Read current time"})

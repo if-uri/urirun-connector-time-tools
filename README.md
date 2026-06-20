@@ -22,6 +22,14 @@ urirun-time-tools now --timezone UTC --output iso
 make smoke        # bindings -> urirun validate/compile/run -> MCP tools + A2A card
 ```
 
+After installation, `urirun` can discover this connector automatically through
+the `urirun.bindings` entry-point group:
+
+```bash
+urirun discover --out connectors.bindings.json --registry-out connectors.registry.json
+urirun list --entry-points
+```
+
 The route is declared once. The connector id and URI scheme are initialized once,
 then each route can use a short path:
 
