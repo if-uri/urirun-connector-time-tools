@@ -41,6 +41,8 @@ CLI, host flows, MCP tools and A2A skills.
 ## Related projects
 
 - Runtime: [tellmesh/urirun](https://github.com/tellmesh/urirun)
+- Docs: [docs.ifuri.com/connectors.html](https://docs.ifuri.com/connectors.html) · [authoring a connector](https://docs.ifuri.com/connector-authoring.html)
+- Hub page: [connect.ifuri.com/connectors/time-tools](https://connect.ifuri.com/connectors/time-tools)
 - Connector hub: [connect.ifuri.com](https://connect.ifuri.com)
 - Examples: [if-uri/examples](https://github.com/if-uri/examples)
 - Current work summary:
