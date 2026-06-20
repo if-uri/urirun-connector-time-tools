@@ -1,6 +1,6 @@
 # urirun-connector-time-tools
 
-Time Tools connector for [ifURI](https://ifuri.com) / [urirun](https://github.com/tellmesh/urirun).
+Time Tools connector for [ifURI](https://ifuri.com) / [urirun](https://github.com/if-uri/urirun).
 
 Public hub page:
 [connect.ifuri.com/connectors/time-tools](https://connect.ifuri.com/connectors/time-tools)
@@ -40,7 +40,7 @@ CLI, host flows, MCP tools and A2A skills.
 
 ## Related projects
 
-- Runtime: [tellmesh/urirun](https://github.com/tellmesh/urirun)
+- Runtime: [if-uri/urirun](https://github.com/if-uri/urirun)
 - Docs: [docs.ifuri.com/connectors.html](https://docs.ifuri.com/connectors.html) · [authoring a connector](https://docs.ifuri.com/connector-authoring.html)
 - Hub page: [connect.ifuri.com/connectors/time-tools](https://connect.ifuri.com/connectors/time-tools)
 - Connector hub: [connect.ifuri.com](https://connect.ifuri.com)
