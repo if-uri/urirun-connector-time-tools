@@ -24,6 +24,9 @@ Repository = "https://github.com/if-uri/urirun-connector-time-tools"
 [project.scripts]
 urirun-time-tools = "urirun_connector_time_tools.cli:main"
 
+[project.entry-points."urirun.bindings"]
+time-tools = "urirun_connector_time_tools:urirun_bindings"
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["urirun_connector_time_tools*"]

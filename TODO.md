@@ -2,6 +2,8 @@
 
 ## Connector roadmap
 
+- [ ] Add this connector to IFURI-016 full host-node Docker matrix with
+      deterministic `time://` routes used by a flow.
 - [ ] Add hub install smoke coverage for `time-tools`.
 - [ ] Add more deterministic formats for flow use, for example epoch seconds,
       date-only and RFC3339.
@@ -9,6 +11,8 @@
       `planfile://` task scheduling.
 - [ ] Keep the manifest and README examples aligned with the current `urirun`
       connector helper API.
+- [ ] Publish route schemas and deterministic-output examples on the connector
+      detail page.
 
 ## Related resources
 

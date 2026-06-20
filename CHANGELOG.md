@@ -3,10 +3,15 @@
 ## [Unreleased]
 
 ### Added
+- Add structure-audit follow-up tasks for IFURI-016 matrix coverage and richer
+  connector contract documentation.
 - Add connector TODO for hub install smoke, extra time formats and flow
   examples.
 - Link README to the public connector hub page, examples and current
   cross-repository work summary.
+
+### Changed
+- Point active runtime dependency and docs links at `github.com/if-uri/urirun`.
 
 ## [0.1.2] - 2026-06-20
 
