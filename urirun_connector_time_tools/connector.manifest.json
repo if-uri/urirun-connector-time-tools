@@ -45,7 +45,7 @@
   ],
   "install": {
     "mode": "urirun-extra",
-    "pipSpec": "urirun-connector-time-tools @ git+https://github.com/if-uri/urirun-connector-time-tools.git@v0.1.1"
+    "pipSpec": "urirun-connector-time-tools @ git+https://github.com/if-uri/urirun-connector-time-tools.git@v0.1.2"
   },
   "provenance": "community",
   "publisher": {

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-06-20
+
+### Changed
+- Require `urirun` `v0.3.14` so connector installs use the runtime with stable
+  unique MCP/A2A tool names.
+
 ## [0.1.1] - 2026-06-20
 
 ### Changed
