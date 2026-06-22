@@ -5,7 +5,8 @@ Time Tools connector for [ifURI](https://ifuri.com) / [urirun](https://github.co
 Public hub page:
 [connect.ifuri.com/connectors/time-tools](https://connect.ifuri.com/connectors/time-tools)
 
-- Declares `time://` URI routes with `@connector.command(...)`.
+- Declares `time://` URI routes with `@conn.handler(..., isolated=True)` — the typed
+  function body is the implementation, run out-of-process from a compiled registry.
 - `connector.manifest.json` is the connect.ifuri.com catalog entry (validated by schema).
 - CLI: `urirun-time-tools now` · `urirun-time-tools manifest` · `urirun-time-tools bindings`.
 
@@ -31,19 +32,21 @@ urirun list --entry-points
 ```
 
 The route is declared once. The connector id and URI scheme are initialized once,
-then each route can use a short path:
+then each route is a single typed `@conn.handler`; `isolated=True` makes urirun run
+it out-of-process (registry-portable) via the shared `python -m urirun.exec` runner:
 
 ```python
 import urirun
 
-connector = urirun.connector("time-tools", scheme="time")
+conn = urirun.connector("time-tools", scheme="time")
 
-@connector.command("clock/query/now")
-def now_command(timezone: str = "UTC", output: str = "iso") -> list[str]:
-    return ["urirun-time-tools", "now", "--timezone", "{timezone}", "--output", "{output}"]
+@conn.handler("clock/query/now", isolated=True, meta={"label": "Read current time"})
+def now(timezone: str = "UTC", output: str = "iso") -> dict:
+    # the function body IS the implementation; it returns a structured result
+    return urirun.ok(now="2026-01-01T00:00:00Z", timezone=timezone)
 ```
 
-`connector.bindings()` turns that declaration into the registry input used by
+`conn.bindings()` turns that declaration into the registry input used by
 CLI, host flows, MCP tools and A2A skills.
 
 ## Related projects
