@@ -1,6 +1,17 @@
 # Author: Tom Sapletta · https://tom.sapletta.com
 # Part of the ifURI solution.
 
+"""Current-time route for urirun.
+
+One typed ``@handler`` declares the route, its input schema (from the signature)
+and its implementation — no argv template, no ``_exec.py``, no ``run_route``
+dispatcher, no ``cli.py``. ``isolated=True`` runs the route out-of-process through
+the shared ``python -m urirun.exec`` runner, so the binding stays
+**registry-portable**: it executes from a compiled/served registry
+(``urirun run``/``urirun node serve``, examples 12/19) with only the package
+importable — no console-script install and no per-connector shim.
+"""
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -9,35 +20,17 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import urirun
 
-ROUTE_NOW = "time://host/clock/query/now"
 CONNECTOR_ID = "time-tools"
-CONNECTOR = urirun.connector(CONNECTOR_ID, scheme="time")
+conn = urirun.connector(CONNECTOR_ID, scheme="time")
 
 
-def connector_manifest() -> dict[str, Any]:
-    return urirun.load_manifest(__package__)
-
-
-@CONNECTOR.command("clock/query/now", meta={"label": "Read current time"})
-def now_command(timezone: str = "UTC", output: str = "iso") -> list[str]:
-    """Declare the URI binding once; the function signature becomes the schema."""
-    return ["urirun-time-tools", "now", "--timezone", "{timezone}", "--output", "{output}"]
-
-
-def urirun_bindings() -> dict[str, Any]:
-    return CONNECTOR.bindings()
-
-
+@conn.handler("clock/query/now", isolated=True, meta={"label": "Read current time"})
 def now(timezone: str = "UTC", output: str = "iso") -> dict[str, Any]:
+    """Return the current time in a timezone as iso / epoch / date."""
     try:
         tz = ZoneInfo(timezone)
     except ZoneInfoNotFoundError:
-        return {
-            "ok": False,
-            "connector": CONNECTOR_ID,
-            "timezone": timezone,
-            "error": f"unknown timezone: {timezone}",
-        }
+        return urirun.fail(f"unknown timezone: {timezone}", timezone=timezone)
 
     current = datetime.now(tz)
     epoch = int(current.timestamp())
@@ -49,13 +42,33 @@ def now(timezone: str = "UTC", output: str = "iso") -> dict[str, Any]:
     else:
         value = iso_value
 
-    return {
-        "ok": True,
-        "connector": CONNECTOR_ID,
-        "timezone": timezone,
-        "output": output,
-        "value": value,
-        "iso": iso_value,
-        "epochSeconds": epoch,
-        "utcOffset": current.strftime("%z"),
-    }
+    return urirun.ok(
+        timezone=timezone,
+        output=output,
+        value=value,
+        iso=iso_value,
+        epochSeconds=epoch,
+        utcOffset=current.strftime("%z"),
+    )
+
+
+def urirun_bindings() -> dict[str, Any]:
+    """Serializable v2 bindings for this connector (entry point: urirun.bindings)."""
+    return conn.bindings()
+
+
+def connector_manifest() -> dict[str, Any]:
+    """Full manifest: prose (connector.manifest.json) + routes/uriSchemes/
+    adapterKinds/examples derived from the handler."""
+    return conn.manifest(urirun.load_manifest(__package__))
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Console-script entry point: subcommands + dispatch derived from the handler."""
+    return conn.cli(argv, manifest_prose=urirun.load_manifest(__package__))
+
+
+if __name__ == "__main__":
+    import sys
+
+    raise SystemExit(main())

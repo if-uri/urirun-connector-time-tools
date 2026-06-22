@@ -4,23 +4,13 @@
 from __future__ import annotations
 
 import json
-import importlib
 
 import urirun
-from urirun_connector_time_tools import connector_manifest, now, urirun_bindings
-from urirun_connector_time_tools.cli import main
+from urirun import v2
+from urirun_connector_time_tools import connector_manifest, main, now, urirun_bindings
+from urirun_connector_time_tools.core import conn
 
-
-def _compile_registry(bindings: dict):
-    compile_registry = getattr(urirun, "compile_registry", None)
-    list_routes = getattr(urirun, "list_routes", None)
-    if compile_registry is not None and list_routes is not None:
-        registry = compile_registry(bindings)
-        return registry, list_routes(registry)
-    v2 = importlib.import_module("urirun.v2")
-
-    registry = v2.compile_registry(bindings)
-    return registry, v2.list_routes(registry)
+ROUTE = "time://host/clock/query/now"
 
 
 def test_now_returns_structured_time() -> None:
@@ -37,42 +27,36 @@ def test_now_rejects_unknown_timezone() -> None:
     assert "unknown timezone" in result["error"]
 
 
-def test_manifest_shape() -> None:
-    manifest = connector_manifest()
-    assert manifest["id"] == "time-tools"
-    assert "time://host/clock/query/now" in manifest["routes"]
+def test_bindings_are_isolated_handler() -> None:
+    b = urirun_bindings()["bindings"][ROUTE]
+    # registry-portable in-process handler: runs out-of-process via urirun.exec
+    assert b["adapter"] == "local-function-subprocess"
+    assert b["python"]["module"] == "urirun_connector_time_tools.core"
+    assert b["python"]["export"] == "now"
+    assert "argv" not in b
+    json.dumps(urirun_bindings())  # serializable: no live ref leaks
 
 
-def test_bindings_shape() -> None:
-    bindings = urirun_bindings()
-    route = bindings["bindings"]["time://host/clock/query/now"]
-    assert route["argv"] == [
-        "urirun-time-tools",
-        "now",
-        "--timezone",
-        "{timezone}",
-        "--output",
-        "{output}",
-    ]
-    assert route["inputSchema"]["properties"]["timezone"]["default"] == "UTC"
-    assert route["inputSchema"]["properties"]["output"]["default"] == "iso"
+def test_runtime_executes_from_compiled_registry() -> None:
+    # the whole point: a serialized->compiled registry still runs the route
+    registry = urirun.compile_registry(json.loads(json.dumps(urirun_bindings())))
+    env = v2.run(ROUTE, registry, payload={"timezone": "UTC", "output": "date"},
+                 mode="execute", policy=urirun.policy(allow=["time://*"]))
+    assert env["ok"] is True
+    data = urirun.result_data(env)
+    assert data["ok"] is True and data["output"] == "date"
 
 
-def test_bindings_are_json_serializable_and_compile() -> None:
-    bindings = urirun_bindings()
-    json.dumps(bindings)
-    _registry, routes = _compile_registry(bindings)
-    assert any(route["uri"] == "time://host/clock/query/now" for route in routes)
+def test_manifest_prose_plus_derived() -> None:
+    m = connector_manifest()
+    assert m["id"] == "time-tools"
+    assert m["routes"] == [ROUTE]
+    assert m["uriSchemes"] == ["time"]
+    assert m["summary"]  # prose preserved
 
 
-def test_cli_now(capsys) -> None:
-    assert main(["now", "--timezone", "UTC", "--output", "date"]) == 0
-    output = json.loads(capsys.readouterr().out)
-    assert output["ok"] is True
-    assert output["output"] == "date"
-
-
-def test_cli_bindings(capsys) -> None:
+def test_cli_bindings_and_manifest(capsys) -> None:
     assert main(["bindings"]) == 0
-    output = json.loads(capsys.readouterr().out)
-    assert "time://host/clock/query/now" in output["bindings"]
+    assert ROUTE in json.loads(capsys.readouterr().out)["bindings"]
+    assert main(["manifest"]) == 0
+    assert json.loads(capsys.readouterr().out)["id"] == "time-tools"

@@ -4,44 +4,17 @@
   "status": "available",
   "category": "Operations",
   "summary": "Expose current time and timezone checks through time:// URI commands.",
-  "description": "Time Tools is a minimal external urirun connector package. It declares time:// routes with @connector.command, returns structured JSON, and can be projected to MCP tools / A2A skills.",
-  "uriSchemes": [
-    "time"
-  ],
-  "routes": [
-    "time://host/clock/query/now"
-  ],
+  "description": "Time Tools is a minimal external urirun connector package. It declares time:// routes with a typed @handler, returns structured JSON, and can be projected to MCP tools / A2A skills.",
   "useCases": [
     "Stamp task and flow execution with host-local or UTC time.",
     "Verify that connector packages can be installed from GitHub and projected to MCP/A2A.",
     "Use time:// in flows without coupling the flow to Python code."
-  ],
-  "examples": [
-    {
-      "title": "Read UTC time",
-      "uri": "time://host/clock/query/now",
-      "payload": {
-        "timezone": "UTC",
-        "output": "iso"
-      }
-    },
-    {
-      "title": "Read Warsaw date",
-      "uri": "time://host/clock/query/now",
-      "payload": {
-        "timezone": "Europe/Warsaw",
-        "output": "date"
-      }
-    }
   ],
   "flowExample": [
     "time://host/clock/query/now"
   ],
   "requires": [
     "python>=3.10"
-  ],
-  "adapterKinds": [
-    "local-function"
   ],
   "install": {
     "mode": "urirun-extra",
