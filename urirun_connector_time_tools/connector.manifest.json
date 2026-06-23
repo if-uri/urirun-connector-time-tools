@@ -33,5 +33,14 @@
     "clock",
     "workflow",
     "connector"
+  ],
+  "routes": [
+    "time://host/clock/query/now"
+  ],
+  "uriSchemes": [
+    "time"
+  ],
+  "adapterKinds": [
+    "local-function"
   ]
 }
