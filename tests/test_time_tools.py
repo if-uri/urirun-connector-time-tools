@@ -60,3 +60,20 @@ def test_cli_bindings_and_manifest(capsys) -> None:
     assert ROUTE in json.loads(capsys.readouterr().out)["bindings"]
     assert main(["manifest"]) == 0
     assert json.loads(capsys.readouterr().out)["id"] == "time-tools"
+
+
+def test_contract_output_shape() -> None:
+    """Live output must satisfy the declared contract out-schema."""
+    import importlib.util, sys
+    sys.path.insert(0, "/home/tom/github/if-uri/urirun-contract")
+    from urirun_connectors_toolkit.contract_gate import validate_output
+    spec = importlib.util.spec_from_file_location(
+        "contracts_time_tools",
+        "/home/tom/github/if-uri/urirun-connector-time-tools/urirun_connector_time_tools/contracts.py",
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    result = now(timezone="UTC", output="iso")
+    assert result["ok"] is True
+    validate_output(mod.CONTRACTS["clock/query/now"], result)
