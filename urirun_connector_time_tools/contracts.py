@@ -11,8 +11,11 @@ CONTRACTS: dict[str, Contract] = {
         effect="query",
         reversible=False,
         inp={"timezone": "?str", "output": "?str"},
-        out={"ok": "bool", "iso": "str", "epochSeconds": "int",
+        out={"oneOf": [
+            {"ok": "const:true", "iso": "str", "epochSeconds": "int",
              "utcOffset": "str", "timezone": "str", "output": "str", "value": "any"},
+            {"ok": "const:false", "error": "str", "timezone": "?str"},
+        ]},
         errors=("precondition-unmet",),
         examples=(
             {

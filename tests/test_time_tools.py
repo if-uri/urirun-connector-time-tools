@@ -64,16 +64,12 @@ def test_cli_bindings_and_manifest(capsys) -> None:
 
 def test_contract_output_shape() -> None:
     """Live output must satisfy the declared contract out-schema."""
-    import importlib.util, sys
-    sys.path.insert(0, "/home/tom/github/if-uri/urirun-contract")
-    from urirun_connectors_toolkit.contract_gate import validate_output
-    spec = importlib.util.spec_from_file_location(
-        "contracts_time_tools",
-        "/home/tom/github/if-uri/urirun-connector-time-tools/urirun_connector_time_tools/contracts.py",
-    )
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
+    from urirun_connectors_toolkit.contract_gate import conform, validate_output
+    from urirun_connector_time_tools.contracts import CONTRACTS
+
+    conform(CONTRACTS)
 
     result = now(timezone="UTC", output="iso")
     assert result["ok"] is True
-    validate_output(mod.CONTRACTS["clock/query/now"], result)
+    validate_output(CONTRACTS["clock/query/now"], result)
+    validate_output(CONTRACTS["clock/query/now"], now(timezone="Not/AZone"))
