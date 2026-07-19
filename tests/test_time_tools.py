@@ -11,6 +11,7 @@ from urirun_connector_time_tools import connector_manifest, main, now, urirun_bi
 from urirun_connector_time_tools.core import conn
 
 ROUTE = "time://host/clock/query/now"
+DOCTOR_ROUTE = "time://host/doctor/query/report"
 
 
 def test_now_returns_structured_time() -> None:
@@ -50,7 +51,7 @@ def test_runtime_executes_from_compiled_registry() -> None:
 def test_manifest_prose_plus_derived() -> None:
     m = connector_manifest()
     assert m["id"] == "time-tools"
-    assert m["routes"] == [ROUTE]
+    assert m["routes"] == [ROUTE, DOCTOR_ROUTE]
     assert m["uriSchemes"] == ["time"]
     assert m["summary"]  # prose preserved
 

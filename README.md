@@ -15,6 +15,7 @@ Public hub page:
 | URI | Purpose |
 | --- | --- |
 | `time://host/clock/query/now` | Return current time for a timezone as JSON. |
+| `time://host/doctor/query/report` | Return a safe connector readiness report. |
 
 ## Quick start
 ```bash

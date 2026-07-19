@@ -14,6 +14,7 @@
 
 ### Changed
 - Point active runtime dependency and docs links at `github.com/if-uri/urirun`.
+- Keep the manifest and route documentation in sync with the readiness probe.
 
 ## [0.1.2] - 2026-06-20
 

@@ -11,7 +11,8 @@
     "Use time:// in flows without coupling the flow to Python code."
   ],
   "flowExample": [
-    "time://host/clock/query/now"
+    "time://host/clock/query/now",
+    "time://host/doctor/query/report"
   ],
   "requires": [
     "python>=3.10"
@@ -35,7 +36,8 @@
     "connector"
   ],
   "routes": [
-    "time://host/clock/query/now"
+    "time://host/clock/query/now",
+    "time://host/doctor/query/report"
   ],
   "uriSchemes": [
     "time"
